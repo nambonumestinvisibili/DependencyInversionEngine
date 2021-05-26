@@ -4,18 +4,19 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public class TypeInstanceCreator<T> where T : class
+    public class TypeInstanceCreator
     {
 
         public bool _isSingleton {get; private set;}
-        private T _type;
-        private Func<T> _typeInstanceCreator;
+        private Type _type;
+        private Func<object> _typeInstanceCreator;
         private static object _singletonInstance;
-        public TypeInstanceCreator(bool isSingleton) 
+        public TypeInstanceCreator(bool isSingleton, Type type) 
         {
+            _type = type;
             _isSingleton = isSingleton;
-            _typeInstanceCreator = () => Activator.CreateInstance<T>();
-            _singletonInstance = Activator.CreateInstance<T>();
+            _typeInstanceCreator = () => Activator.CreateInstance(type);
+            _singletonInstance = Activator.CreateInstance(type);
             
         }
 
