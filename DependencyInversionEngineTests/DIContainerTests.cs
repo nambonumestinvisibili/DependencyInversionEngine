@@ -110,6 +110,22 @@ namespace DependencyInversionEngine.Tests
             Assert.IsFalse(Assert.ReferenceEquals(impl, impl2));
         }
 
+        //Tests TaskSet DI 2
+        
+        [TestMethod()]
+        public void ShouldRegisterInstance()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            IFoo f1 = new Foo();
+            simpleContainer.RegisterInstance<IFoo>(f1);
+
+            IFoo f2 = simpleContainer.Resolve<IFoo>();
+
+            Assert.IsTrue(ReferenceEquals(f1, f2));
+        }
+
+
     }
 
     public interface IFoo

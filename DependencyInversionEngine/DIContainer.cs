@@ -5,21 +5,34 @@ using System.Text;
 namespace DependencyInversionEngine
 {
     public class DIContainer : ISimpleContainer
+
     {
-        private Dictionary<Type, Func<object>> _transientDictionary = new Dictionary<Type, Func<object>>();
-        private Dictionary<Type, object> _singletonDictionary = new Dictionary<Type, object>();
-        private Dictionary<Type, TypeInstanceCreator> _registeredTypes = new Dictionary<Type, DependencyInversionEngine.TypeInstanceCreator>();
+        private IInstanceProviderFactory factory = new InstanceProviderFactory();
+        private Dictionary<Type, IInstanceProvider> _registeredTypes = new Dictionary<Type, IInstanceProvider>();
 
-        public void RegisterType<T>(bool singleton) where T : class
+        public void RegisterInstance<T>(T instance)
         {
-
             if (_registeredTypes.ContainsKey(typeof(T)))
             {
-                _registeredTypes[typeof(T)] = new TypeInstanceCreator(singleton, typeof(T));
+                _registeredTypes[typeof(T)] = factory.CreateProvider(instance);
             }
             else
             {
-                _registeredTypes.Add(typeof(T), new TypeInstanceCreator(singleton, typeof(T)));
+                _registeredTypes.Add(typeof(T), factory.CreateProvider(instance));
+            }
+        }
+
+        public void RegisterType<T>(bool singleton) where T : class
+        {
+           
+
+            if (_registeredTypes.ContainsKey(typeof(T)))
+            {
+                _registeredTypes[typeof(T)] = factory.CreateProvider(singleton, typeof(T));
+            }
+            else
+            {
+                _registeredTypes.Add(typeof(T), factory.CreateProvider(singleton, typeof(T)));
             }
 
         }
@@ -28,11 +41,11 @@ namespace DependencyInversionEngine
         {
             if (_registeredTypes.ContainsKey(typeof(From)))
             {
-                _registeredTypes[typeof(From)] = new TypeInstanceCreator(singleton, typeof(To));
+                _registeredTypes[typeof(From)] = factory.CreateProvider(singleton, typeof(To));
             }
             else
             {
-                _registeredTypes.Add(typeof(From), new TypeInstanceCreator(singleton, typeof(To)));
+                _registeredTypes.Add(typeof(From), factory.CreateProvider(singleton, typeof(To)));
             }
         }
 
@@ -40,7 +53,7 @@ namespace DependencyInversionEngine
         {
             if (_registeredTypes.ContainsKey(typeof(T)))
             {
-                return (T)_registeredTypes[typeof(T)].Create();
+                return (T)_registeredTypes[typeof(T)].Create(_registeredTypes);
             }
             else if (typeof(T).IsInterface)
             {
@@ -49,7 +62,7 @@ namespace DependencyInversionEngine
             else
             {
                 RegisterType<T>(false);
-                return (T)_registeredTypes[typeof(T)].Create();
+                return (T)_registeredTypes[typeof(T)].Create(_registeredTypes);
             }
         }
 

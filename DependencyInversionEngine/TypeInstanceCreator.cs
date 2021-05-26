@@ -4,13 +4,13 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public class TypeInstanceCreator
+    public abstract class TypeInstanceCreator
     {
 
         public bool _isSingleton {get; private set;}
         private Type _type;
         private Func<object> _typeInstanceCreator;
-        private static object _singletonInstance;
+        private object _singletonInstance;
         public TypeInstanceCreator(bool isSingleton, Type type) 
         {
             _type = type;
@@ -20,7 +20,15 @@ namespace DependencyInversionEngine
             
         }
 
-        public object Create()
+        public TypeInstanceCreator(object instance)
+        {
+            _type = instance.GetType();
+            _isSingleton = true;
+            _typeInstanceCreator = () => Activator.CreateInstance(_type);
+            _singletonInstance = instance;
+        }
+
+        public object Create(Dictionary<Type, TypeInstanceCreator> registeredTypes)
         {
             if (_isSingleton)
             {
@@ -31,6 +39,7 @@ namespace DependencyInversionEngine
                 return _typeInstanceCreator.Invoke();
             }
         }
+
 
 
     }
