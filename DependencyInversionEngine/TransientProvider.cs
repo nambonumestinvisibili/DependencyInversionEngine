@@ -8,9 +8,9 @@ namespace DependencyInversionEngine
     {
 
         private Func<object> _provider;
-        public TransientProvider(Type type) : base(type)
+        public TransientProvider(Type type, Dictionary<Type, IInstanceProvider> registeredTypes) : base(type)
         {
-            _provider = () => Activator.CreateInstance(type);
+            _provider = () => Resolve(registeredTypes);
         }
 
         public override object Create(Dictionary<Type, IInstanceProvider> registeredTypes)

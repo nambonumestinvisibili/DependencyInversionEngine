@@ -28,11 +28,11 @@ namespace DependencyInversionEngine
 
             if (_registeredTypes.ContainsKey(typeof(T)))
             {
-                _registeredTypes[typeof(T)] = factory.CreateProvider(singleton, typeof(T));
+                _registeredTypes[typeof(T)] = factory.CreateProvider(singleton, typeof(T), _registeredTypes);
             }
             else
             {
-                _registeredTypes.Add(typeof(T), factory.CreateProvider(singleton, typeof(T)));
+                _registeredTypes.Add(typeof(T), factory.CreateProvider(singleton, typeof(T), _registeredTypes));
             }
 
         }
@@ -41,11 +41,11 @@ namespace DependencyInversionEngine
         {
             if (_registeredTypes.ContainsKey(typeof(From)))
             {
-                _registeredTypes[typeof(From)] = factory.CreateProvider(singleton, typeof(To));
+                _registeredTypes[typeof(From)] = factory.CreateProvider(singleton, typeof(To), _registeredTypes);
             }
             else
             {
-                _registeredTypes.Add(typeof(From), factory.CreateProvider(singleton, typeof(To)));
+                _registeredTypes.Add(typeof(From), factory.CreateProvider(singleton, typeof(To), _registeredTypes));
             }
         }
 
@@ -65,6 +65,8 @@ namespace DependencyInversionEngine
                 return (T)_registeredTypes[typeof(T)].Create(_registeredTypes);
             }
         }
+
+
 
         
     }

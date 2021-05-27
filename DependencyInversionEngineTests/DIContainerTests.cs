@@ -125,7 +125,43 @@ namespace DependencyInversionEngine.Tests
             Assert.IsTrue(ReferenceEquals(f1, f2));
         }
 
+        [TestMethod()]
+        public void ShouldCreateTypeWithParams_SingletonV()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
 
+            simpleContainer.RegisterType<B>(true);
+            simpleContainer.RegisterType<A>(true);
+            A a = simpleContainer.Resolve<A>();
+
+            Assert.IsTrue(a.b != null);
+        }
+
+        [TestMethod()]
+        public void ShouldCreateTypeWithParams_TransientV()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<B>(false);
+            simpleContainer.RegisterType<A>(false);
+            A a = simpleContainer.Resolve<A>();
+
+            Assert.IsTrue(a.b != null);
+        }
+
+        [TestMethod()]
+        public void ShouldThrowExceptionWhenTryingToConstructInstanceWIthUnregisteredParameter()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<A>(false);
+
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                A a = simpleContainer.Resolve<A>();
+            });
+        }
     }
 
     public interface IFoo
@@ -142,4 +178,16 @@ namespace DependencyInversionEngine.Tests
     {
 
     }
+
+    public class A
+    {
+        public B b;
+
+        public A( B b )
+        {
+            this.b = b;
+        }
+    }
+
+    public class B { }
 }

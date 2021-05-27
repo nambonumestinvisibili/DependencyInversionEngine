@@ -6,14 +6,14 @@ namespace DependencyInversionEngine
 {
     public interface IInstanceProviderFactory
     {
-        public IInstanceProvider CreateProvider(bool isSingleton, Type type);
+        public IInstanceProvider CreateProvider(bool isSingleton, Type type, Dictionary<Type, IInstanceProvider> registeredTypes);
         public IInstanceProvider CreateProvider(object instance);
     }
 
     public class InstanceProviderFactory : IInstanceProviderFactory
     {
 
-        public IInstanceProvider CreateProvider(bool isSingleton, Type type)
+        public IInstanceProvider CreateProvider(bool isSingleton, Type type, Dictionary<Type, IInstanceProvider> registeredTypes)
         {
             if (isSingleton)
             {
@@ -21,7 +21,7 @@ namespace DependencyInversionEngine
             }
             else
             {
-                return new TransientProvider(type);
+                return new TransientProvider(type, registeredTypes);
             }
         }
 

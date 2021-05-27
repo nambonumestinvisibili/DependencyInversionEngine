@@ -10,18 +10,22 @@ namespace DependencyInversionEngine
 
         public SingletonProvider(Type type) : base(type)
         {
-            _instance = Activator.CreateInstance(_type);
+         
         }
 
         public SingletonProvider(object instance)
         {
             _type = instance.GetType();
-            _instance = instance;
         }
 
         public override object Create(Dictionary<Type, IInstanceProvider> registeredTypes)
         {
+            if (_instance != null) return _instance;
+
+            _instance = Resolve(registeredTypes);
+
             return _instance;
+
         }
     }
 }
