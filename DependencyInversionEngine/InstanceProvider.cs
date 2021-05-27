@@ -48,7 +48,7 @@ namespace DependencyInversionEngine
                 catch (Exception e)
                 {
                     resolvedParams.Clear();
-                    break;
+                    continue;
                 }
 
                 var instance = constructorInfo.Invoke(resolvedParams.ToArray());
@@ -102,7 +102,7 @@ namespace DependencyInversionEngine
             var maxNumberOfParms = constructors
                 .Select(x => x.GetParameters().Length).Max();
             var constructorsWithMaxParams = constructors
-                .Where(x => x.GetParameters().Length == maxNumberOfParms);
+                .Where(x => x.GetParameters().Length == maxNumberOfParms).ToList();
 
             return constructorsWithMaxParams;
         }

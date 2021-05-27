@@ -162,6 +162,18 @@ namespace DependencyInversionEngine.Tests
                 A a = simpleContainer.Resolve<A>();
             });
         }
+
+        [TestMethod()]
+        public void ShouldUseSecondConstructor()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<D>(false);
+            simpleContainer.RegisterType<C>(false);
+            C c = simpleContainer.Resolve<C>();
+
+            Assert.IsTrue(c.d != null);
+        }
     }
 
     public interface IFoo
@@ -188,6 +200,23 @@ namespace DependencyInversionEngine.Tests
             this.b = b;
         }
     }
-
     public class B { }
+
+    public class C {
+        public B b;
+        public D d;
+        public C (B b)
+        {
+            this.b = b;
+        }
+
+        public C (D d)
+        {
+            this.d = d;
+        }
+    
+    }
+
+    public class D { }
+
 }
