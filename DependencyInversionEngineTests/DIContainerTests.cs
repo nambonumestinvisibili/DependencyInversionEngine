@@ -189,6 +189,21 @@ namespace DependencyInversionEngine.Tests
 
            });
         }
+
+        [TestMethod()]
+        public void ShouldDetectCycle2()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<F>(false);
+            simpleContainer.RegisterType<C>(false);
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                C c = simpleContainer.Resolve<C>();
+                Console.WriteLine();
+            });
+        }
     }
 
     public interface IFoo
@@ -221,6 +236,8 @@ namespace DependencyInversionEngine.Tests
         public B b;
         public D d;
         public E e;
+        public F f;
+
         public C (B b)
         {
             this.b = b;
@@ -235,6 +252,11 @@ namespace DependencyInversionEngine.Tests
         {
             this.e = e;
         }
+
+        public C(F f)
+        {
+            this.f = f;
+        }
     
     }
 
@@ -245,6 +267,14 @@ namespace DependencyInversionEngine.Tests
         public E(C c)
         {
             this.c = c;
+        }
+    }
+    public class F
+    {
+        public E e;
+        public F(E e)
+        {
+            this.e = e;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace DependencyInversionEngine
         public SingletonProvider(object instance)
         {
             _type = instance.GetType();
+            _instance = instance;
         }
 
         public override object Create(Dictionary<Type, IInstanceProvider> registeredTypes)

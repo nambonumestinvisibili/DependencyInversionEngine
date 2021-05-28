@@ -106,6 +106,7 @@ namespace DependencyInversionEngine
             var noneOfTheParametersHaveDependencyOnRootType = 
                 parameters.All(x => x.ParameterType != rootType);
             if (!noneOfTheParametersHaveDependencyOnRootType) return true;
+
             var noDependencyFurther = parameters.All(x =>
             {
                 var construcotrs = GetConstructorsWithMaximalNoOfParameters(x.ParameterType);
