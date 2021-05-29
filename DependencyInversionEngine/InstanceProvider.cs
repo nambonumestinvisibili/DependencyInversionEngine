@@ -53,7 +53,7 @@ namespace DependencyInversionEngine
                 return instance;
             }
 
-            throw new Exception("Type could not be resolved" + info);
+            throw new ConstructorUnresolvableException("Type could not be resolved" + info);
         }
 
         private List<object> ResolveConstructor(

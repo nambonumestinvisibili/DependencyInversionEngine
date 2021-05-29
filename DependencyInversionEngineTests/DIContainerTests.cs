@@ -157,7 +157,7 @@ namespace DependencyInversionEngine.Tests
             simpleContainer.RegisterType<A>(false);
 
 
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<ConstructorUnresolvableException>(() =>
             {
                 A a = simpleContainer.Resolve<A>();
             });
