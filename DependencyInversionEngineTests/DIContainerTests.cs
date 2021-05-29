@@ -183,7 +183,7 @@ namespace DependencyInversionEngine.Tests
             simpleContainer.RegisterType<E>(false);
             simpleContainer.RegisterType<C>(false);
 
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<DependencyCycleException>(() =>
            {
                C c = simpleContainer.Resolve<C>();
 
@@ -198,7 +198,7 @@ namespace DependencyInversionEngine.Tests
             simpleContainer.RegisterType<F>(false);
             simpleContainer.RegisterType<C>(false);
 
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<DependencyCycleException>(() =>
             {
                 C c = simpleContainer.Resolve<C>();
                 Console.WriteLine();
@@ -227,7 +227,7 @@ namespace DependencyInversionEngine.Tests
             simpleContainer.RegisterType<Y>(false);
             simpleContainer.RegisterType<X>(false);
 
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsException<NoConstructorsException>(() =>
             {
                 var res = simpleContainer.Resolve<X>();
             });

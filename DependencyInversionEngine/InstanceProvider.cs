@@ -41,12 +41,13 @@ namespace DependencyInversionEngine
                 {
                     resolvedParams = ResolveConstructor(constructorInfo, registeredTypes);
                 }
-                catch (Exception e)
+                catch (ConstructorUnresolvableException e)
                 {
                     resolvedParams.Clear();
                     info = " - " + e.Message;
                     continue;
                 }
+                
 
                 var instance = constructorInfo.Invoke(resolvedParams.ToArray());
                 return instance;
@@ -61,7 +62,7 @@ namespace DependencyInversionEngine
             )
         {
             if (CycleDetected(constructorInfo, _type, registeredTypes)) {
-                throw new Exception("Dependency circuit has been detected");
+                throw new DependencyCycleException("Dependency circuit has been detected");
             }
             var resolvedParameters = new List<object>(); 
 
@@ -72,9 +73,9 @@ namespace DependencyInversionEngine
                     var parameter = ResolveParameter(paramInfo.ParameterType, registeredTypes);
                     resolvedParameters.Add(parameter);
                 }
-                catch (Exception e)
+                catch (UnregisteredParameterException e)
                 {
-                    throw new Exception("Constructor cannot be resolved - " + e.Message);
+                    throw new ConstructorUnresolvableException("Constructor cannot be resolved - " + e.Message);
                 }
             }
 
@@ -91,7 +92,7 @@ namespace DependencyInversionEngine
             }
            else
             {
-                throw new Exception(String.Format("Parameter {0} has not been registered", type));
+                throw new UnregisteredParameterException(String.Format("Parameter {0} has not been registered", type));
             }
         }
 
@@ -122,9 +123,11 @@ namespace DependencyInversionEngine
             return !(noneOfTheParametersHaveDependencyOnRootType && noDependencyFurther);
         }
 
-        protected IEnumerable<ConstructorInfo> GetConstructorsWithMaximalNoOfParameters(Type type)
+        private IEnumerable<ConstructorInfo> GetConstructorsWithMaximalNoOfParameters(Type type)
         {
             var constructors = new List<ConstructorInfo>(type.GetConstructors());
+
+            if (constructors.Count() == 0) throw new NoConstructorsException(String.Format("No constructors {0}", type));
 
             var maxNumberOfParms = constructors
                 .Select(x => x.GetParameters().Length).Max();
