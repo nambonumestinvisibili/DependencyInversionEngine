@@ -32,12 +32,6 @@ namespace DependencyInversionEngine
 
             var constructorsInfo = GetConstructors(_type);
 
-
-            //if (constructorsInfo.ElementAt(0).GetParameters().Length == 0)
-            //{
-            //    return constructorsInfo.ElementAt(0).Invoke(resolvedParams.ToArray());
-            //}
-
             var info = "";
 
             foreach (var constructorInfo in constructorsInfo)
