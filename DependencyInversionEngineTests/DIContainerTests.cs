@@ -204,6 +204,50 @@ namespace DependencyInversionEngine.Tests
                 Console.WriteLine();
             });
         }
+
+        [TestMethod()]
+        public void ShouldPickAttributedConstrucotrFirst()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<B>(false);
+            simpleContainer.RegisterType<D>(false);
+            simpleContainer.RegisterType<G>(false);
+
+            var res = simpleContainer.Resolve<G>();
+
+            Assert.IsTrue(res.d != null);
+        }
+
+        [TestMethod()]
+        public void ShouldThrowExceptionWhenTheOnlyConstructorHasParametersThatCanNotBeResolved()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<Y>(false);
+            simpleContainer.RegisterType<X>(false);
+
+            Assert.ThrowsException<Exception>(() =>
+            {
+                var res = simpleContainer.Resolve<X>();
+            });
+
+        }
+
+        [TestMethod()]
+        public void ShouldCreateTypeWhenTheOnlyConstructorHasParametersThatCanNotBeResolvedButIsRegisteredAsInstance()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            string s = "ala ma kota";
+            simpleContainer.RegisterInstance<string>(s);
+            simpleContainer.RegisterType<Y>(false);
+            simpleContainer.RegisterType<X>(false);
+
+            var res = simpleContainer.Resolve<X>();
+
+            Assert.IsTrue(res.s == s);
+        }
     }
 
     public interface IFoo
@@ -277,4 +321,34 @@ namespace DependencyInversionEngine.Tests
             this.e = e;
         }
     }
+
+    public class G
+    {
+        public B b;
+        public D d;
+
+        public G(B b)
+        {
+            this.b = b;
+        }
+
+        [DependencyConstructor]
+        public G(D d)
+        {
+            this.d = d;
+        }
+    }
+
+    public class X
+    {
+        Y d;
+        public string s;
+        public X(Y d, string s) {
+            this.d = d;
+            this.s = s;
+        }
+    }
+
+    public class Y { }
+
 }

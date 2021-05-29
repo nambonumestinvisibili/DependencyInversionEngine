@@ -30,12 +30,13 @@ namespace DependencyInversionEngine
         {
             var resolvedParams = new List<object>();
 
-            var constructorsInfo = GetConstructorsWithMaximalNoOfParameters();
+            var constructorsInfo = GetConstructors(_type);
 
-            if (constructorsInfo.ElementAt(0).GetParameters().Length == 0)
-            {
-                return constructorsInfo.ElementAt(0).Invoke(resolvedParams.ToArray());
-            }
+
+            //if (constructorsInfo.ElementAt(0).GetParameters().Length == 0)
+            //{
+            //    return constructorsInfo.ElementAt(0).Invoke(resolvedParams.ToArray());
+            //}
 
             var info = "";
 
@@ -65,7 +66,7 @@ namespace DependencyInversionEngine
             Dictionary<Type, IInstanceProvider> registeredTypes
             )
         {
-            if (CycleDetected(constructorInfo, _type)) {
+            if (CycleDetected(constructorInfo, _type, registeredTypes)) {
                 throw new Exception("Dependency circuit has been detected");
             }
             var resolvedParameters = new List<object>(); 
@@ -100,7 +101,10 @@ namespace DependencyInversionEngine
             }
         }
 
-        private bool CycleDetected(ConstructorInfo constructorInfo, Type rootType)
+        private bool CycleDetected(
+            ConstructorInfo constructorInfo,
+            Type rootType, 
+            Dictionary<Type, IInstanceProvider> registeredTypes)
         {
             var parameters = constructorInfo.GetParameters();
             var noneOfTheParametersHaveDependencyOnRootType = 
@@ -109,27 +113,19 @@ namespace DependencyInversionEngine
 
             var noDependencyFurther = parameters.All(x =>
             {
+                if (registeredTypes.ContainsKey(x.ParameterType) && registeredTypes[x.ParameterType].GetType() == typeof(SingletonProvider))
+                {
+                    return true;
+                }
                 var construcotrs = GetConstructorsWithMaximalNoOfParameters(x.ParameterType);
                 var res = true;
                 construcotrs.ToList().ForEach(c =>
                 {
-                    res = res && c.GetParameters().All(z => !CycleDetected(c, rootType));
+                    res = res && c.GetParameters().All(z => !CycleDetected(c, rootType, registeredTypes));
                 });
                 return res;
             });
             return !(noneOfTheParametersHaveDependencyOnRootType && noDependencyFurther);
-        }
-
-        protected IEnumerable<ConstructorInfo> GetConstructorsWithMaximalNoOfParameters()
-        {
-            var constructors = new List<ConstructorInfo>(_type.GetConstructors());
-
-            var maxNumberOfParms = constructors
-                .Select(x => x.GetParameters().Length).Max();
-            var constructorsWithMaxParams = constructors
-                .Where(x => x.GetParameters().Length == maxNumberOfParms).ToList();
-
-            return constructorsWithMaxParams;
         }
 
         protected IEnumerable<ConstructorInfo> GetConstructorsWithMaximalNoOfParameters(Type type)
@@ -142,6 +138,28 @@ namespace DependencyInversionEngine
                 .Where(x => x.GetParameters().Length == maxNumberOfParms).ToList();
 
             return constructorsWithMaxParams;
+        }
+    
+        private IEnumerable<ConstructorInfo> GetConstructors(Type type)
+        {
+            List<ConstructorInfo> attributedConstructors = new List<ConstructorInfo>();
+
+            foreach(var constructor in type.GetConstructors())
+            {
+                if (constructor
+                    .GetCustomAttributes(typeof(DependencyConstructor), false)
+                    .Any())
+                {
+                    attributedConstructors.Add(constructor);
+                }
+            }
+
+            if (attributedConstructors.Count() == 0)
+            {
+                attributedConstructors = GetConstructorsWithMaximalNoOfParameters(type).ToList();
+            }
+
+            return attributedConstructors;
         }
     }
 }
