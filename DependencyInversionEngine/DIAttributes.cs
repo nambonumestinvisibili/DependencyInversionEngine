@@ -8,4 +8,10 @@ namespace DependencyInversionEngine
     public class DependencyConstructor : Attribute
     {
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DependencyProperty : Attribute
+    {
+
+    }
 }

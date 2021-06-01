@@ -31,4 +31,18 @@ namespace DependencyInversionEngine
         {
         }
     }
+
+    public class PropertyUnresolvableException : Exception
+    {
+        public PropertyUnresolvableException(string message) : base(message)
+        {
+        }
+    }
+
+    public class NotPublicPropertyInjectionException : Exception
+    {
+        public NotPublicPropertyInjectionException(string message) : base(message)
+        {
+        }
+    }
 }

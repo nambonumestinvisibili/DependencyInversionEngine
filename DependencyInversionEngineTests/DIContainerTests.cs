@@ -248,6 +248,40 @@ namespace DependencyInversionEngine.Tests
 
             Assert.IsTrue(res.s == s);
         }
+
+        //tests part three
+
+        [TestMethod()]
+        public void ShouldHandleInjectingProperty()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<C3>(false);
+            simpleContainer.RegisterType<B3>(false);
+            simpleContainer.RegisterType<A3>(false);
+
+            var res = simpleContainer.Resolve<A3>();
+
+
+            Assert.IsTrue(res.TheC != null);
+        }
+
+        [TestMethod()]
+        public void ShouldHandleInjectingPropertyWithDependencies()
+        {
+            ISimpleContainer simpleContainer = new DIContainer();
+
+            simpleContainer.RegisterType<B>(false);
+            simpleContainer.RegisterType<A>(false);
+            simpleContainer.RegisterType<C3>(false);
+            simpleContainer.RegisterType<B3>(false);
+            simpleContainer.RegisterType<D3>(false);
+
+            var res = simpleContainer.Resolve<D3>();
+
+
+            Assert.IsTrue(res.TheA != null && res.TheA.b != null && res.TheC != null);
+        }
     }
 
     public interface IFoo
@@ -351,4 +385,33 @@ namespace DependencyInversionEngine.Tests
 
     public class Y { }
 
+
+    public class A3
+    {
+        public B3 b;
+        public A3(B3 b)
+        {
+            this.b = b;
+        }
+        [DependencyProperty]
+        public C3 TheC { get; set; }
+    }
+
+    public class B3 { }
+    public class C3 { }
+
+    public class D3
+    {
+        public B3 b;
+        public D3(B3 b)
+        {
+            this.b = b;
+        }
+        [DependencyProperty]
+        public A TheA { get; set; }
+
+        [DependencyProperty]
+        public C3 TheC { get; set; }
+    }
+  
 }

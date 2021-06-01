@@ -50,11 +50,67 @@ namespace DependencyInversionEngine
                 
 
                 var instance = constructorInfo.Invoke(resolvedParams.ToArray());
+                InjectProperties(instance, registeredTypes);
                 return instance;
             }
 
             throw new ConstructorUnresolvableException("Type could not be resolved" + info);
         }
+
+        private void InjectProperties(object instance, Dictionary<Type, IInstanceProvider> registeredTypes)
+        {
+            var propertiesWithAttributeInfo = _type
+                .GetProperties()
+                .Where(property => Attribute.IsDefined(property, typeof(DependencyProperty)));
+
+            foreach (var propInfo in propertiesWithAttributeInfo)
+            {
+                if (propInfo.GetSetMethod().IsPublic)
+                {
+                    ResolveProperty(propInfo, registeredTypes, instance); //it injects...
+                    
+                }
+                else
+                {
+                    throw new NotPublicPropertyInjectionException(propInfo.GetType().ToString() + " is not");
+                }
+            }
+
+        }
+
+        private object ResolveProperty(PropertyInfo propertyInfo, Dictionary<Type, IInstanceProvider> registeredTypes, object owner)
+        {
+            Type propType = propertyInfo.PropertyType;
+            var constructors = GetConstructorsWithMaximalNoOfParameters(propType);
+
+            var resolvedParams = new List<object>();
+            var info = " ";
+
+            foreach (var constructorInfo in constructors)
+            {
+
+                try
+                {
+                    resolvedParams = ResolveConstructor(constructorInfo, registeredTypes);
+                }
+                catch (ConstructorUnresolvableException e)
+                {
+                    resolvedParams.Clear();
+                    info = " - " + e.Message;
+                    continue;
+                }
+
+                var instance = constructorInfo.Invoke(resolvedParams.ToArray());
+                
+                propertyInfo.SetValue(owner, instance);
+                return instance;
+            }
+
+            throw new PropertyUnresolvableException("Property could not be resolved" + info);
+
+        }
+
+
 
         private List<object> ResolveConstructor(
             ConstructorInfo constructorInfo,
