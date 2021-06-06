@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public class TransientProvider : AbstractInstanceProvider
+    internal class TransientProvider : AbstractInstanceProvider
     {
 
         private Func<object> _provider;

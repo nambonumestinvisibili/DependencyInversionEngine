@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public class DIContainer : ISimpleContainer
+    public class DIContainer : IDependencyInversionContainer
 
     {
         private IInstanceProviderFactory factory = new InstanceProviderFactory();

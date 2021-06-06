@@ -10,7 +10,7 @@ namespace DependencyInversionEngine
         public IInstanceProvider CreateProvider(object instance);
     }
 
-    public class InstanceProviderFactory : IInstanceProviderFactory
+    internal class InstanceProviderFactory : IInstanceProviderFactory
     {
 
         public IInstanceProvider CreateProvider(bool isSingleton, Type type, Dictionary<Type, IInstanceProvider> registeredTypes)

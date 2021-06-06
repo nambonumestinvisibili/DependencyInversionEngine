@@ -13,7 +13,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReceivedDifferentObjects()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
             simpleContainer.RegisterType<Foo>(false);
 
             var f = simpleContainer.Resolve<Foo>();
@@ -26,7 +26,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReceivedTheSameObject()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
             simpleContainer.RegisterType<Foo>(true);
 
             var f = simpleContainer.Resolve<Foo>();
@@ -39,7 +39,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldThrowExceptionWhenInterfaceImplementationNotRegistered()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
 
             Assert.ThrowsException<Exception>(() =>
@@ -51,7 +51,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldNOTThrowExceptionWhenTypeNotRegistered() //Uwaga 1
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             var f = simpleContainer.Resolve<Foo>();
             Assert.IsTrue(f.GetType() == typeof(Foo));
@@ -60,7 +60,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReturnRegisteredImplementationOfInterface()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<IFoo, Foo>(true);
             var impl = simpleContainer.Resolve<IFoo>();
@@ -72,7 +72,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReturnLatestRegisteredImplementationOfInterface()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<IFoo, Foo>(true);
             var impl = simpleContainer.Resolve<IFoo>();
@@ -87,7 +87,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReturnTheSameObject()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<IFoo, Foo>(true);
             var impl = simpleContainer.Resolve<IFoo>();
@@ -100,7 +100,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldReturnDifferentObjects()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<IFoo, Foo>(false);
             var impl = simpleContainer.Resolve<IFoo>();
@@ -115,7 +115,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldRegisterInstance()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             IFoo f1 = new Foo();
             simpleContainer.RegisterInstance<IFoo>(f1);
@@ -128,7 +128,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldCreateTypeWithParams_SingletonV()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<B>(true);
             simpleContainer.RegisterType<A>(true);
@@ -140,7 +140,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldCreateTypeWithParams_TransientV()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<B>(false);
             simpleContainer.RegisterType<A>(false);
@@ -152,7 +152,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldThrowExceptionWhenTryingToConstructInstanceWIthUnregisteredParameter()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<A>(false);
 
@@ -166,7 +166,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldUseSecondConstructor()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<D>(false);
             simpleContainer.RegisterType<C>(false);
@@ -178,7 +178,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldDetectCycle()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<E>(false);
             simpleContainer.RegisterType<C>(false);
@@ -193,7 +193,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldDetectCycle2()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<F>(false);
             simpleContainer.RegisterType<C>(false);
@@ -208,7 +208,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldPickAttributedConstrucotrFirst()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<B>(false);
             simpleContainer.RegisterType<D>(false);
@@ -222,7 +222,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldThrowExceptionWhenTheOnlyConstructorHasParametersThatCanNotBeResolved()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<Y>(false);
             simpleContainer.RegisterType<X>(false);
@@ -237,7 +237,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldCreateTypeWhenTheOnlyConstructorHasParametersThatCanNotBeResolvedButIsRegisteredAsInstance()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             string s = "ala ma kota";
             simpleContainer.RegisterInstance<string>(s);
@@ -254,7 +254,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldHandleInjectingProperty()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<C3>(false);
             simpleContainer.RegisterType<B3>(false);
@@ -269,7 +269,7 @@ namespace DependencyInversionEngine.Tests
         [TestMethod()]
         public void ShouldHandleInjectingPropertyWithDependencies()
         {
-            ISimpleContainer simpleContainer = new DIContainer();
+            IDependencyInversionContainer simpleContainer = new DIContainer();
 
             simpleContainer.RegisterType<B>(false);
             simpleContainer.RegisterType<A>(false);

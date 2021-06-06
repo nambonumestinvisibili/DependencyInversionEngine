@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public interface ISimpleContainer
+    public interface IDependencyInversionContainer
     {
         public void RegisterType<T>(bool Singleton) where T : class;
         public void RegisterType<From, To>(bool Singleton) where To : From;

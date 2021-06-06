@@ -11,7 +11,7 @@ namespace DependencyInversionEngine
         public object Create(Dictionary<Type, IInstanceProvider> registeredTypes);
     }
 
-    public abstract class AbstractInstanceProvider : IInstanceProvider
+    internal abstract class AbstractInstanceProvider : IInstanceProvider
     {
         public abstract object Create(Dictionary<Type, IInstanceProvider> registeredTypes);
 

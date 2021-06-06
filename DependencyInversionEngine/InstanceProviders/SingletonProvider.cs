@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public class SingletonProvider : AbstractInstanceProvider
+    internal class SingletonProvider : AbstractInstanceProvider
     {
         private object _instance;
 
