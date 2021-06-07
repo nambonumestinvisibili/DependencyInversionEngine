@@ -45,4 +45,11 @@ namespace DependencyInversionEngine
         {
         }
     }
+
+    public class ContainerProviderNotSetException : Exception
+    {
+        public ContainerProviderNotSetException()
+        {
+        }
+    }
 }

@@ -47,7 +47,6 @@ namespace DependencyInversionEngine.InstanceProviders
 
             throw new ConstructorUnresolvableException("Type could not be resolved" + info);
         }
-
         public void InjectProperties(object instance, Dictionary<Type, IInstanceProvider> registeredTypes)
         {
             var propertiesWithAttributeInfo = _type
@@ -68,7 +67,6 @@ namespace DependencyInversionEngine.InstanceProviders
             }
 
         }
-
         private object ResolveProperty(PropertyInfo propertyInfo, Dictionary<Type, IInstanceProvider> registeredTypes, object owner)
         {
             Type propType = propertyInfo.PropertyType;
@@ -100,9 +98,6 @@ namespace DependencyInversionEngine.InstanceProviders
             throw new PropertyUnresolvableException("Property could not be resolved" + info);
 
         }
-
-
-
         private List<object> ResolveConstructor(
             ConstructorInfo constructorInfo,
             Dictionary<Type, IInstanceProvider> registeredTypes
@@ -129,7 +124,6 @@ namespace DependencyInversionEngine.InstanceProviders
 
             return resolvedParameters;
         }
-
         private object ResolveParameter(
             Type type,
             Dictionary<Type, IInstanceProvider> registeredTypes)
@@ -143,7 +137,6 @@ namespace DependencyInversionEngine.InstanceProviders
                 throw new UnregisteredParameterException(String.Format("Parameter {0} has not been registered", type));
             }
         }
-
         private bool CycleDetected(
             ConstructorInfo constructorInfo,
             Type rootType,

@@ -5,14 +5,14 @@ using System.Text;
 
 namespace DependencyInversionEngine
 {
-    public interface IInstanceProviderFactory
+    public interface IInstancerFactory
     {
         public IInstanceProvider CreateProvider(bool isSingleton, Type type, Dictionary<Type, IInstanceProvider> registeredTypes);
         public IInstanceProvider CreateProvider(object instance);
         public IInstanceBuilder CreateBuilder(object instance, Dictionary<Type, IInstanceProvider> registeredTypes);
     }
 
-    internal class InstanceProviderFactory : IInstanceProviderFactory
+    internal class InstanceProviderFactory : IInstancerFactory
     {
         public IInstanceBuilder CreateBuilder(object instance, Dictionary<Type, IInstanceProvider> registeredTypes)
         {

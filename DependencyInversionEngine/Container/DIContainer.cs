@@ -7,7 +7,7 @@ namespace DependencyInversionEngine
     public class DIContainer : IDependencyInversionContainer
 
     {
-        private IInstanceProviderFactory factory = new InstanceProviderFactory();
+        private IInstancerFactory factory = new InstanceProviderFactory();
         private Dictionary<Type, IInstanceProvider> _registeredTypes = new Dictionary<Type, IInstanceProvider>();
 
         public void BuildUp<T>(T instance)
