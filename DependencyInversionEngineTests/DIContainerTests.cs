@@ -282,6 +282,32 @@ namespace DependencyInversionEngine.Tests
 
             Assert.IsTrue(res.TheA != null && res.TheA.b != null && res.TheC != null);
         }
+
+        [TestMethod()]
+        public void ShouldBuildUpUnfamiliarObject()
+        {
+            IDependencyInversionContainer simpleContainer = new DIContainer();
+
+            A3 a3 = new A3(new B3());
+            simpleContainer.RegisterType<C3>(false);
+
+            simpleContainer.BuildUp<A3>(a3);
+
+
+            Assert.IsTrue(a3.TheC != null);
+        }
+
+        [TestMethod()]
+        public void ShouldBuildUpUnfamiliarObject2()
+        {
+            IDependencyInversionContainer simpleContainer = new DIContainer();
+
+            A3 a3 = new A3(new B3());
+            simpleContainer.BuildUp<A3>(a3);
+            Assert.IsTrue(a3.TheC != null);
+        }
+
+        
     }
 
     public interface IFoo
@@ -413,5 +439,16 @@ namespace DependencyInversionEngine.Tests
         [DependencyProperty]
         public C3 TheC { get; set; }
     }
-  
+
+    public class F3
+    {
+        public B3 b;
+        public F3(B3 b)
+        {
+            this.b = b;
+        }
+        [DependencyProperty]
+        public F TheF { get; set; }
+    }
+
 }

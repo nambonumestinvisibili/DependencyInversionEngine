@@ -10,6 +10,12 @@ namespace DependencyInversionEngine
         private IInstanceProviderFactory factory = new InstanceProviderFactory();
         private Dictionary<Type, IInstanceProvider> _registeredTypes = new Dictionary<Type, IInstanceProvider>();
 
+        public void BuildUp<T>(T instance)
+        {
+            IInstanceBuilder instanceBuilder = factory.CreateBuilder(instance, _registeredTypes);
+            instanceBuilder.BuildInstance();
+        }
+
         public void RegisterInstance<T>(T instance)
         {
             if (_registeredTypes.ContainsKey(typeof(T)))

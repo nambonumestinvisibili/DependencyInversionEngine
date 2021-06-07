@@ -23,7 +23,7 @@ namespace DependencyInversionEngine
         {
             if (_instance != null) return _instance;
 
-            _instance = Resolve(registeredTypes);
+            _instance = resolver.Resolve(registeredTypes);
 
             return _instance;
 
